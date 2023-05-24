@@ -75,7 +75,7 @@ int stream_close(PTSTREAM *pts) {
 /* Read from a stream */
 int stream_read(PTSTREAM *pts, void *buf, size_t len) {
 	/* Read up to the specified number of bytes into the buffer */
-	int bytes_read;	
+	int bytes_read;
 
 	if (!pts->ssl) {
 		/* For a non-SSL stream... */
@@ -321,9 +321,9 @@ int stream_enable_ssl(PTSTREAM *pts, const char *proxy_arg) {
         message("SSL_new failed\n");
         goto fail;
     }
-	
+
 	SSL_set_rfd (ssl, stream_get_incoming_fd(pts));
-	SSL_set_wfd (ssl, stream_get_outgoing_fd(pts));	
+	SSL_set_wfd (ssl, stream_get_outgoing_fd(pts));
 
 	/* Determine the host name we are connecting to */
 	proxy_arg_len = strlen(proxy_arg);
@@ -344,10 +344,9 @@ int stream_enable_ssl(PTSTREAM *pts, const char *proxy_arg) {
 	if (res != SSL_TLSEXT_ERR_OK) {
 		unsigned long ssl_err = (res == SSL_TLSEXT_ERR_ALERT_WARNING ? SSL_TLSEXT_ERR_ALERT_WARNING : ERR_get_error());
 		message( "SSL_set_tlsext_host_name returned: %lu (0x%lx). "
-		         "TLS SNI error, giving up\n", ssl_err, ssl_err );
-		exit( 1 );
+		         "TLS SNI error, NOT giving up\n", ssl_err, ssl_err );
 	}
-	
+
 	if ( SSL_connect (ssl) <= 0) {
         message( "SSL_connect failed\n");
         goto fail;
